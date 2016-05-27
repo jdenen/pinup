@@ -39,6 +39,15 @@
 			      (get-buffer-window-list buf))
 			   (buffer-list)))))
 
+(defcustom pinup-mode-line
+  '(:eval (if (window-dedicated-p)
+	      " Pinned"
+	    " Unpinned"))
+  "Mode line for Pinup."
+  :group 'projectile
+  :type 'sexp
+  :risky t)
+
 (defcustom pinup-keymap-prefix (kbd "C-x p")
   "Pinup keymap prefix."
   :group 'pinup
@@ -50,3 +59,27 @@
     (define-key map (kbd "1") #'pinup-kill-other-windows)
     map)
   "Keymap for Pinup commands after `pinup-keymap-prefix'.")
+
+(defvar pinup-mode-map
+  (let ((map (make-sparse-keymap))
+    define-key map pinup-keymap-prefix 'pinup-command-map)
+    map)
+  "Keymap for Pinup mode.")
+
+(define-minor-mode pinup-mode
+  "Minor mode to assist with window management.
+
+When called interactively, toggle `pinup-mode'.
+
+\\{pinup-mode-map}"
+  :lighter pinup-mode-line
+  :keymap pinup-mode-map
+  :group 'pinup
+  :require 'pinup
+  )
+
+(define-globalized-minor-mode pinup-global-mode
+  pinup-mode
+  pinup-mode)
+
+(provide 'pinup)
