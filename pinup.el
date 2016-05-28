@@ -24,8 +24,12 @@ See `set-window-dedicated-p' about dedicated windows."
    (if (let (window (pinup--get-current-buffer-window))
 	 (set-window-dedicated-p window
 				 (not (window-dedicated-p window))))
-       "Pinning '%s' window"
-     "Unpinning '%s' window")
+       (progn
+	 (pinup--update-mode-line " Pinned")
+	 "Pinning '%s' window")
+     (progn
+       (pinup--update-mode-line " Unpinned")
+       "Unpinning '%s' window"))
    (current-buffer)))
 
 (defun pinup-kill-other-windows ()
@@ -47,6 +51,15 @@ See `set-window-dedicated-p' about dedicated windows."
 			   '(lambda (buf)
 			      (get-buffer-window-list buf))
 			   (buffer-list)))))
+
+(defun pinup--update-mode-line (text)
+  "Reformat mode line with TEXT."
+  (message nil)
+  (with-current-buffer (current-buffer)
+    (make-local-variable 'mode-line-format)
+    (let ((mode-line-format text))
+      (force-mode-line-update)))
+  (force-mode-line-update))
 
 ;;;###autoload
 (define-minor-mode pinup-mode
