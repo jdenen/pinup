@@ -1,3 +1,39 @@
+;;; pinup.el --- Manage dedicated windows -*- logical-binding: t -*-
+
+;; Copyright © 2016 Johnson Denen <johnson.denen@gmail.com>
+
+;; Author: Johnson Denen <johnson.denen@gmail.com>
+;; URL: https://github.com/jdenen/pinup
+;; Keywords: dedicated, pinned, convenience
+;; Version: 0.14.0-cvs
+;; Package-Requires: ((dash "2.11.0") (pkg-info "0.4"))
+
+;; This file is NOT part of GNU Emacs.
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 3, or (at your option)
+;; any later version.
+;;
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with GNU Emacs; see the file COPYING.  If not, write to the
+;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
+
+;;; Commentary:
+
+;; This library provides easy management of dedicated windows. A
+;; dedicated window is one which will not display another buffer in
+;; it. This library refers to dedicated windows as "pinned." See
+;; README for more details.
+;;
+;;; Code:
+
 (require 'cl)
 
 (defgroup pinup nil
