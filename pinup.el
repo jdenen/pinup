@@ -5,11 +5,20 @@
   :group 'tools
   :group 'convenience)
 
-(defun pinup-window ()
+(defcustom pinup-mode-line
+  `(:eval (if (window-dedicated-p)
+	      " Pinned"
+	    " Unpinned"))
+  "Mode line for Pinup."
+  :group 'pinup
+  :type 'sexp
+  :risky t)
+
+(defun pinup-toggle-window ()
   "Toggle whether the current window is pinned or not.
 
-            Pinned windows are not killed by `pinup-kill-other-windows' and they are dedicated.
-            See `set-window-dedicated-p' about dedicated windows."
+Pinned windows are not killed by `pinup-kill-other-windows' and they are dedicated.
+See `set-window-dedicated-p' about dedicated windows."
   (interactive)
   (message
    (if (let (window (pinup--get-current-buffer-window))
@@ -20,7 +29,7 @@
    (current-buffer)))
 
 (defun pinup-kill-other-windows ()
-  "Kill non `current-buffer' windows that have not been pinned with `pinup-window'."
+  "Kill non `current-buffer' windows that have not been pinned with `pinup-toggle-window'."
   (interactive)
   (loop for window in (pinup--list-visible-windows)
 	do (unless (window-dedicated-p window)
@@ -39,47 +48,13 @@
 			      (get-buffer-window-list buf))
 			   (buffer-list)))))
 
-(defcustom pinup-mode-line
-  '(:eval (if (window-dedicated-p)
-	      " Pinned"
-	    " Unpinned"))
-  "Mode line for Pinup."
-  :group 'projectile
-  :type 'sexp
-  :risky t)
-
-(defcustom pinup-keymap-prefix (kbd "C-x p")
-  "Pinup keymap prefix."
-  :group 'pinup
-  :type 'string)
-
-(defvar pinup-command-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "p") #'pinup-window)
-    (define-key map (kbd "1") #'pinup-kill-other-windows)
-    map)
-  "Keymap for Pinup commands after `pinup-keymap-prefix'.")
-
-(defvar pinup-mode-map
-  (let ((map (make-sparse-keymap))
-    define-key map pinup-keymap-prefix 'pinup-command-map)
-    map)
-  "Keymap for Pinup mode.")
-
+;;;###autoload
 (define-minor-mode pinup-mode
   "Minor mode to assist with window management.
 
-When called interactively, toggle `pinup-mode'.
-
 \\{pinup-mode-map}"
   :lighter pinup-mode-line
-  :keymap pinup-mode-map
   :group 'pinup
-  :require 'pinup
-  )
+  :require 'pinup)
 
-(define-globalized-minor-mode pinup-global-mode
-  pinup-mode
-  pinup-mode)
-
-(provide 'pinup)
+(provide 'pinup-mode)
