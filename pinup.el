@@ -82,7 +82,9 @@ See `set-window-dedicated-p' about dedicated windows."
   "Minimize the currently pinned window."
   (interactive)
   (setq pinup-pinned-window-normal-width (pinup--get-pinned-window-width))
-  (minimize-window pinup-pinned-window))
+  (if pinup-pinned-window
+      (minimize-window pinup-pinned-window)
+    nil))
 
 (defun pinup--set-pinned-window (&optional window)
   "Set or clear value of `pinup-pinned-window'."
