@@ -53,7 +53,7 @@
 (defun pinup-toggle-window ()
   "Toggle whether the current window is pinned or not.
 
-Pinned windows are not killed by `pinup-kill-other-windows' and they are dedicated.
+Pinned windows are not killed by `pinup-delete-other-windows' and they are dedicated.
 See `set-window-dedicated-p' about dedicated windows."
   (interactive)
   (message
@@ -70,7 +70,7 @@ See `set-window-dedicated-p' about dedicated windows."
 	 "Unpinning '%s' window"))
    (current-buffer)))
 
-(defun pinup-kill-other-windows ()
+(defun pinup-delete-other-windows ()
   "Kill non `current-buffer' windows that have not been pinned with `pinup-toggle-window'."
   (interactive)
   (loop for window in (pinup--list-visible-windows)
