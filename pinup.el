@@ -70,6 +70,23 @@ See `set-window-dedicated-p' about dedicated windows."
 	 "Unpinning '%s' window"))
    (current-buffer)))
 
+(defun pinup-pin-window ()
+  "Pin current window, making it the target of `pinup-mode' functions.
+
+If `pinup-mode' is enabled, this function will updated the mode line with 'Pinned'.
+Pinnings write over their predecessors, so only one window may be pinned at a time."
+  (interactive)
+  (pinup--set-pinned-window (pinup--get-current-buffer-window))
+  (pinup--update-mode-line " Pinned"))
+
+(defun pinup-unpin-window ()
+  "Unpin the pinned window, rendering `pinup-mode' functions useless.
+
+If `pinup-mode' is enabled, this function will remove 'Pinned' from the mode line."
+  (interactive)
+  (pinup--set-pinned-window nil)
+  (pinup--update-mode-line ""))
+
 (defun pinup-delete-other-windows ()
   "Kill non `current-buffer' windows that have not been pinned with `pinup-toggle-window'."
   (interactive)
