@@ -86,6 +86,15 @@ See `set-window-dedicated-p' about dedicated windows."
       (minimize-window pinup-pinned-window)
     nil))
 
+(defun pinup-restore-pinned ()
+  "Restore pinned window to width before `pinup-minimize-pinned' was called."
+  (interactive)
+  (window-resize pinup-pinned-window (pinup--get-pinned-width-delta) t))
+
+(defun pinup--get-pinned-width-delta ()
+  "Difference of pinned window's pre-minified width and its current width."
+  (- pinup-pinned-window-normal-width (pinup--get-pinned-window-width)))
+
 (defun pinup--set-pinned-window (&optional window)
   "Set or clear value of `pinup-pinned-window'."
   (if window
