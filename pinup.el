@@ -60,12 +60,14 @@ See `set-window-dedicated-p' about dedicated windows."
    (if (let (window (pinup--get-current-buffer-window))
 	 (set-window-dedicated-p window
 				 (not (window-dedicated-p window))))
+	 (progn
+	   (pinup--set-pinned-window (pinup--get-current-buffer-window))
+	   (pinup--update-mode-line " Pinned")
+	   "Pinning '%s' window")
        (progn
-	 (pinup--update-mode-line " Pinned")
-	 "Pinning '%s' window")
-     (progn
-       (pinup--update-mode-line " Unpinned")
-       "Unpinning '%s' window"))
+	 (pinup--set-pinned-window nil)
+	 (pinup--update-mode-line " Unpinned")
+	 "Unpinning '%s' window"))
    (current-buffer)))
 
 (defun pinup-kill-other-windows ()
@@ -75,6 +77,22 @@ See `set-window-dedicated-p' about dedicated windows."
 	do (unless (window-dedicated-p window)
 	     (unless (eq (pinup--get-current-buffer-window) window)
 	       (delete-window window)))))
+
+(defun pinup-minimize-pinned ()
+  "Minimize the currently pinned window."
+  (interactive)
+  (setq pinup-pinned-window-normal-width (pinup--get-pinned-window-width))
+  (minimize-window pinup-pinned-window))
+
+(defun pinup--set-pinned-window (&optional window)
+  "Set or clear value of `pinup-pinned-window'."
+  (if window
+      (setq pinup-pinned-window window)
+    (setq pinup-pinned-window nil)))
+
+(defun pinup--get-pinned-window-width ()
+  "Get width of the currently pinned window."
+  (window-width pinup-pinned-window))
 
 (defun pinup--get-current-buffer-window ()
   "Return window for the `current-buffer'."
