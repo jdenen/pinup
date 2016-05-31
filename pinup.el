@@ -88,12 +88,12 @@ If `pinup-mode' is enabled, this function will remove 'Pinned' from the mode lin
   (pinup--update-mode-line ""))
 
 (defun pinup-delete-other-windows ()
-  "Kill non `current-buffer' windows that have not been pinned with `pinup-toggle-window'."
+  "Kill other unpinned windows."
   (interactive)
-  (loop for window in (pinup--list-visible-windows)
-	do (unless (window-dedicated-p window)
-	     (unless (eq (pinup--get-current-buffer-window) window)
-	       (delete-window window)))))
+  (dolist (win (pinup--list-visible-windows) nil)
+    (unless (or (eq pinup-pinned-window win)
+		(eq (pinup--get-current-buffer-window) win)
+      (delete-window win)))))
 
 (defun pinup-minimize-pinned ()
   "Minimize the currently pinned window."
