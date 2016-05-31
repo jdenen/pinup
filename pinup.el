@@ -75,8 +75,11 @@ window may be pinned at a time."
 If `pinup-mode' is enabled, this function will remove
 'Pinned' from the mode line."
   (interactive)
-  (pinup--set-pinned-window nil)
-  (pinup--update-mode-line ""))
+  (if pinup-pinned-window
+      (progn
+	(set-window-dedicated-p pinup-pinned-window nil)
+	(pinup--set-pinned-window nil)
+	(pinup--update-mode-line ""))))
 
 (defun pinup-delete-other-windows ()
   "Delete other unpinned windows."
@@ -106,7 +109,9 @@ If `pinup-mode' is enabled, this function will remove
 (defun pinup--set-pinned-window (&optional window)
   "Set `pinup-pinned-window' to WINDOW."
   (if window
-      (setq pinup-pinned-window window)
+      (progn
+	(set-window-dedicated-p window t)
+	(setq pinup-pinned-window window))
     (setq pinup-pinned-window nil)))
 
 (defun pinup--get-pinned-window-width ()
