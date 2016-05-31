@@ -43,9 +43,9 @@
   :group 'convenience)
 
 (defcustom pinup-mode-line
-  `(:eval (if (window-dedicated-p)
+  `(:eval (if (eq pinup-pinned-window (pinup--get-current-buffer-window))
 	      " Pinned"
-	    " Unpinned"))
+	    ""))
   "Mode line for Pinup."
   :group 'pinup
   :type 'sexp
