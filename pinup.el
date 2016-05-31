@@ -54,26 +54,6 @@
 (defvar pinup-pinned-window-normal-width nil
   "Pinned window width before minification.")
 
-(defun pinup-toggle-window ()
-  "Toggle whether the current window is pinned or not.
-
-Pinned windows are not killed by `pinup-delete-other-windows' and they are dedicated.
-See `set-window-dedicated-p' about dedicated windows."
-  (interactive)
-  (message
-   (if (let (window (pinup--get-current-buffer-window))
-	 (set-window-dedicated-p window
-				 (not (window-dedicated-p window))))
-	 (progn
-	   (pinup--set-pinned-window (pinup--get-current-buffer-window))
-	   (pinup--update-mode-line " Pinned")
-	   "Pinning '%s' window")
-       (progn
-	 (pinup--set-pinned-window nil)
-	 (pinup--update-mode-line " Unpinned")
-	 "Unpinning '%s' window"))
-   (current-buffer)))
-
 (defun pinup-pin-window ()
   "Pin current window, making it the target of `pinup-mode' functions.
 
