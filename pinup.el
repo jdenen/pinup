@@ -50,6 +50,12 @@
   :type 'sexp
   :risky t)
 
+(defvar pinup-pinned-window nil
+  "Currently pinned window.")
+
+(defvar pinup-pinned-window-normal-width nil
+  "Pinned window width before minification.")
+
 (defun pinup-toggle-window ()
   "Toggle whether the current window is pinned or not.
 
