@@ -102,6 +102,16 @@ If `pinup-mode' is enabled, this function will remove
   (interactive)
   (window-resize pinup-pinned-window (pinup--get-pinned-width-delta) t))
 
+(defun pinup-goto ()
+  "Switch to pinned window.
+
+If the pinned window is minimized, restore it to normal width before switching."
+  (interactive)
+  (if pinup-pinned-window
+      (progn
+	(pinup-restore-pinned)
+	(select-window pinup-pinned-window))))
+
 (defun pinup--get-pinned-width-delta ()
   "Difference of pinned window's pre-minified width and its current width."
   (- pinup-pinned-window-normal-width (pinup--get-pinned-window-width)))
