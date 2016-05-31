@@ -27,9 +27,9 @@
 
 ;;; Commentary:
 
-;; This library provides easy management of dedicated windows. A
+;; This library provides easy management of dedicated windows.  A
 ;; dedicated window is one which will not display another buffer in
-;; it. This library refers to dedicated windows as "pinned." See
+;; it.  This library refers to dedicated windows as "pinned." See
 ;; README for more details.
 ;;
 ;;; Code:
@@ -117,7 +117,7 @@ If `pinup-mode' is enabled, this function will remove 'Pinned' from the mode lin
   (- pinup-pinned-window-normal-width (pinup--get-pinned-window-width)))
 
 (defun pinup--set-pinned-window (&optional window)
-  "Set or clear value of `pinup-pinned-window'."
+  "Set `pinup-pinned-window' to WINDOW."
   (if window
       (setq pinup-pinned-window window)
     (setq pinup-pinned-window nil)))
@@ -157,3 +157,4 @@ If `pinup-mode' is enabled, this function will remove 'Pinned' from the mode lin
   :require 'pinup)
 
 (provide 'pinup-mode)
+;;; pinup.el ends here
