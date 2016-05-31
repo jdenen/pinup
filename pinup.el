@@ -34,8 +34,6 @@
 ;;
 ;;; Code:
 
-(require 'cl)
-
 (defgroup pinup nil
   "Pin and manage pinned windows."
   :group 'tools
