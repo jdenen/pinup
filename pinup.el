@@ -6,7 +6,6 @@
 ;; URL: https://github.com/jdenen/pinup
 ;; Keywords: dedicated, pinned, convenience
 ;; Version: 0.14.0-cvs
-;; Package-Requires: ((dash "2.11.0") (pkg-info "0.4"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -26,6 +25,10 @@
 ;; Boston, MA 02110-1301, USA.
 
 ;;; Commentary:
+
+;; Pinup provides functions to support a dedicated, ever-present window
+;; for visibility and easy access.  For a full description and examples
+;; of its use, see the `README.md' file packaged with pinup.el.
 
 ;; This library provides easy management of dedicated windows.  A
 ;; dedicated window is one which will not display another buffer in
@@ -121,9 +124,7 @@ If `pinup-mode' is enabled, this function will remove 'Pinned' from the mode lin
 
 ;;;###autoload
 (define-minor-mode pinup-mode
-  "Minor mode to assist with window management.
-
-\\{pinup-mode-map}"
+  "Minor mode to assist with window management."
   :lighter pinup-mode-line
   :group 'pinup
   :require 'pinup)
