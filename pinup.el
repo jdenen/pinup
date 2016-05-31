@@ -94,7 +94,7 @@ If `pinup-mode' is enabled, this function will remove 'Pinned' from the mode lin
 (defun pinup-delete-other-windows ()
   "Kill other unpinned windows."
   (interactive)
-  (dolist (win (pinup--list-visible-windows) nil)
+  (dolist (win (window-list) nil)
     (unless (or (eq pinup-pinned-window win)
 		(eq (pinup--get-current-buffer-window) win)
       (delete-window win)))))
@@ -129,14 +129,6 @@ If `pinup-mode' is enabled, this function will remove 'Pinned' from the mode lin
 (defun pinup--get-current-buffer-window ()
   "Return window for the `current-buffer'."
   (get-buffer-window (current-buffer)))
-
-(defun pinup--list-visible-windows ()
-  "Return list of windows."
-  (apply #'append (remove nil
-			  (mapcar
-			   '(lambda (buf)
-			      (get-buffer-window-list buf))
-			   (buffer-list)))))
 
 (defun pinup--update-mode-line (text)
   "Reformat mode line with TEXT."
