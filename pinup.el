@@ -57,33 +57,37 @@
 (defvar pinup-pinned-window-normal-width nil
   "Pinned window width before minification.")
 
-(defun pinup-pin-window ()
-  "Pin current window, making it the target of `pinup-mode' functions.
+(defun pinup-pin ()
+  "Pin current window.
 
-If `pinup-mode' is enabled, this function will updated the mode line with 'Pinned'.
-Pinnings write over their predecessors, so only one window may be pinned at a time."
+If `pinup-mode' is enabled, this function will update
+the mode line with 'Pinned'.
+
+Pinnings write over their predecessors, so only one
+window may be pinned at a time."
   (interactive)
   (pinup--set-pinned-window (pinup--get-current-buffer-window))
   (pinup--update-mode-line " Pinned"))
 
-(defun pinup-unpin-window ()
-  "Unpin the pinned window, rendering `pinup-mode' functions useless.
+(defun pinup-unpin ()
+  "Unpin the pinned window.
 
-If `pinup-mode' is enabled, this function will remove 'Pinned' from the mode line."
+If `pinup-mode' is enabled, this function will remove
+'Pinned' from the mode line."
   (interactive)
   (pinup--set-pinned-window nil)
   (pinup--update-mode-line ""))
 
 (defun pinup-delete-other-windows ()
-  "Kill other unpinned windows."
+  "Delete other unpinned windows."
   (interactive)
   (dolist (win (window-list) nil)
     (unless (or (eq pinup-pinned-window win)
 		(eq (pinup--get-current-buffer-window) win)
       (delete-window win)))))
 
-(defun pinup-minimize-pinned ()
-  "Minimize the currently pinned window."
+(defun pinup-minimize ()
+  "Minimize the pinned window."
   (interactive)
   (setq pinup-pinned-window-normal-width (pinup--get-pinned-window-width))
   (if pinup-pinned-window
