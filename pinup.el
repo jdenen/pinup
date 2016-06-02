@@ -51,13 +51,46 @@
   :type 'sexp
   :risky t)
 
-(defvar pinup-pinned-window nil
-  "Currently pinned window.")
+(defcustom pinup-keymap-prefix (kbd "C-c u")
+  "Pinup keymap prefix."
+  :group 'pinup
+  :type 'string)
 
-(defvar pinup-pinned-window-normal-width nil
-  "Pinned window width before minification.")
+(defcustom pinup-pinned-default-width nil
+  "Constant width of pinned window."
+  :group 'pinup
+  :type 'integer)
 
-(defun pinup-pin ()
+(defcustom pinup-default-pinned-buffer nil
+  "Default pinned window to this buffer."
+  :group 'pinup
+  :type 'function)
+
+(defcustom pinup-minimize-on-other-window nil
+  "Boolean to determine if pinned window is minimized on `pinup-other-window'."
+  :group 'pinup
+  :type 'boolean)
+
+(defvar pinup-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map pinup-keymap-prefix
+      (let ((commands (make-sparse-keymap)))
+	(define-key commands (kbd "u") #'pinup)
+	(define-key commands (kbd "d") #'pindown)
+	(define-key commands (kbd "m") #'pinup-minimize)
+	(define-key commands (kbd "r") #'pinup-restore)
+	(define-key commands (kbd "j") #'pinup-jump)
+	(define-key commands (kbd "o") #'pinup-other-window)
+	(define-key commands (kbd "1") #'pinup-delete-other-windows)
+	(define-key commands (kbd "k") #'pinup-clear-pinned-window)
+	commands))
+    map)
+  "Keymap for Pinup.")
+
+(defvar pinup-pinned-window nil)
+(defvar pinup-pinned-window-normal-width nil)
+
+(defun pinup ()
   "Pin current window.
 
 If `pinup-mode' is enabled, this function will update
@@ -69,7 +102,7 @@ window may be pinned at a time."
   (pinup--set-pinned-window (pinup--get-current-buffer-window))
   (pinup--update-mode-line " Pinned"))
 
-(defun pinup-unpin ()
+(defun pindown ()
   "Unpin the pinned window.
 
 If `pinup-mode' is enabled, this function will remove
@@ -97,24 +130,45 @@ If `pinup-mode' is enabled, this function will remove
       (minimize-window pinup-pinned-window)
     nil))
 
-(defun pinup-restore-pinned ()
+(defun pinup-restore ()
   "Restore pinned window to width before `pinup-minimize-pinned' was called."
   (interactive)
   (window-resize pinup-pinned-window (pinup--get-pinned-width-delta) t))
 
-(defun pinup-goto ()
-  "Switch to pinned window.
+(defun pinup-jump ()
+  "Jump to pinned window.
 
 If the pinned window is minimized, restore it to normal width before switching."
   (interactive)
   (if pinup-pinned-window
       (progn
-	(pinup-restore-pinned)
-	(select-window pinup-pinned-window))))
+	(pinup-restore)
+	(select-window pinup-pinned-window))
+    (if pinup-default-pinned-buffer
+	(progn
+	  (funcall pinup-default-pinned-buffer)
+	  (pinup)
+	  (pinup-restore)))))
+
+(defun pinup-other-window ()
+  "Jump away from the pinned window.
+
+If `pinup-minimize-on-other-window' is non-nil, minimize the pinned window."
+  (interactive)
+  (other-window 1)
+  (if pinup-minimize-on-other-window
+      (pinup-minimize)))
+
+(defun pinup-clear-pinned-window ()
+  "Set `pinup-pinned-window' to nil."
+  (interactive)
+  (setq pinup-pinned-window nil))
 
 (defun pinup--get-pinned-width-delta ()
   "Difference of pinned window's pre-minified width and its current width."
-  (- pinup-pinned-window-normal-width (pinup--get-pinned-window-width)))
+  (- (or pinup-pinned-default-width
+	 pinup-pinned-window-normal-width)
+     (pinup--get-pinned-window-width)))
 
 (defun pinup--set-pinned-window (&optional window)
   "Set `pinup-pinned-window' to WINDOW."
@@ -143,10 +197,12 @@ If the pinned window is minimized, restore it to normal width before switching."
 
 ;;;###autoload
 (define-minor-mode pinup-mode
-  "Minor mode to assist with window management."
+  "Minor mode to manage a persistant, buffer-dedicated window."
   :lighter pinup-mode-line
   :group 'pinup
-  :require 'pinup)
+  :require 'pinup
+  :keymap pinup-mode-map
+  :global t)
 
-(provide 'pinup-mode)
+(provide 'pinup)
 ;;; pinup.el ends here
