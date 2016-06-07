@@ -150,12 +150,13 @@ If the pinned window is minimized, restore it to normal width before switching."
 	  (pinup)
 	  (pinup-restore)))))
 
-(defun pinup-other-window ()
+(defun pinup-other-window (&optional ARG)
   "Jump away from the pinned window.
 
-If `pinup-minimize-on-other-window' is non-nil, minimize the pinned window."
-  (interactive)
-  (other-window 1)
+If `pinup-minimize-on-other-window' is non-nil, minimize the pinned window.
+Prefix with ARG number of windows to skip. Defaults to 1."
+  (interactive "P")
+  (other-window (or ARG 1))
   (if pinup-minimize-on-other-window
       (pinup-minimize)))
 
